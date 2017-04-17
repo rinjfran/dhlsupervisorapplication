@@ -1,0 +1,282 @@
+ion-content{
+  background: #e7e7e7;
+}
+
+.ng-table th.sortable.sort-asc, .ng-table th.sortable.sort-desc{
+  background-color: #ffc821 !important;
+}
+
+.selected {
+ background-color: red !important;
+}
+
+.notselected {
+ background: transparent !important;
+}
+
+.coffee-icon{
+  color: #9c9494 !important;
+  font-size: 23px !important;
+  margin-left: 3%;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.dashboard-tab {
+  background: #ffc821;
+  width: 100%;
+  height: 61px;
+  padding: 0;
+}
+
+.dahsboardtab-item {
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #4A4A4A;
+  letter-spacing: 0;
+  line-height: 22px;
+  text-align: center;
+  padding: 20px;
+}
+
+.dahsboardtab-itemselected {
+  @extend .dahsboardtab-item;
+  background: #e7e7e7;
+}
+
+.ion-ios-clock-outline {
+  content: url('../img/time.png') !important;
+  margin-bottom: -5px;
+}
+
+.ion-ios-person-outline {
+  content: url('../img/user.png') !important;
+  margin-bottom: -14px;
+}
+.refresh-icon{
+  font-family: HelveticaNeue-Medium;
+  font-size: 15px !important;
+  color: #4A4A4A;
+  letter-spacing: 0;
+  line-height: 3.2;
+  text-align: left;
+}
+.ion-ios-refresh-empty:before {
+  font-size: 25px !important;
+}
+.button.activated {
+  border: none;
+  background: none;
+}
+
+.app-details {
+  text-align: right;
+  padding-right: 3% !important;
+}
+
+p {
+  display: inline;
+  font-family: HelveticaNeue-Medium;
+  font-size: 15px !important;
+  color: #4A4A4A;
+  letter-spacing: 0;
+  line-height: 3.2;
+  text-align: left;
+  padding: 5px;
+}
+
+.app-name{
+font-weight: bold;
+}
+
+.overview-content{
+  margin: 1%;
+  margin-top: 5%;
+}
+
+.overview-tab{
+  background:transparent;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    height:43px;
+}
+
+.overview-row{
+  background: #e7e7e7;
+}
+
+.overviewtab-item{
+  margin-right: 8px !important;
+    padding: 10px !important;
+    text-align: center;
+    background:#dadada;
+    height: 43px;
+    max-width: 101px;
+    font-family:HelveticaNeue-Bold;
+font-size:13px;
+color:#4A4A4A;
+letter-spacing:0;
+line-height: 1.2;
+font-weight: bold;
+}
+
+.overviewtab-itemselected{
+  @extend .overviewtab-item;
+  background:#f4f4f4;
+  border-top: 5px solid #ffc821;
+  padding: 5px !important;
+}
+
+.completed-content{
+  background:#f4f4f4;
+  padding: 10px;
+}
+
+.workers-list{
+  border:1px solid #979797;
+width:100%;
+height:100%;
+
+.item{
+  font-family:Helvetica;
+  font-size:13px;
+  color:#4A4A4A;
+  letter-spacing:0;
+  line-height:22px;
+  text-align:left;
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  width: 100%;
+  padding: 5px 0px 5px 5px !important;
+
+}
+}
+
+.workers-content{
+padding: 0;
+margin: 0;
+background: transparent;
+
+.col{
+  padding: 0;
+  margin: 0;
+}
+
+.col-15{
+  flex: 0 0 13%;
+  max-width: 13%;
+  margin-right: 2% !important;
+}
+
+.col-85{
+  flex: 0 0 85%;
+  max-width: 85%;
+}
+.name-displaytab{
+    background:#4a4a4a;
+    height:37px;
+    font-family:HelveticaNeue-Medium;
+font-size:18px;
+color:#FFFFFF;;
+letter-spacing:0;
+line-height:22px;
+text-align:left;
+padding: 5px;
+  }
+
+  .workers-tab{
+    @extend .overview-tab;
+    margin-top: 10px;
+
+  }
+
+  .all-content{
+    background:#f4f4f4;
+    padding: 10px;
+  }
+
+}
+
+table{
+  margin-bottom: 0 !important;
+  background:#ffffff;
+border:1px solid #979797;
+}
+
+th,td{
+  background:#ffffff;
+  text-align: center;
+}
+.ng-table-pager{
+  display: none;
+}
+
+.col-55{
+  flex: 0 0 55%;
+  max-width: 55%;
+  margin-right: 2% !important;
+}
+
+.col-45{
+  flex: 0 0 43%;
+  max-width: 43%;
+}
+
+.progress{
+  height: 20px !important;
+  width: 256px;
+  margin-top: 10px;
+  margin-bottom: 10px !important;
+  background: #d8d8d8 !important;
+}
+
+.progress-bar{
+  font-size: 14px !important;
+padding-top: 2px !important;
+}
+
+.progressgood{
+  background: #69d7ab !important;
+}
+
+.progressbad{
+  background: #f0676c !important;
+}
+
+.progressnormal{
+  background: #ffc821 !important;
+}
+
+.greenrow{
+  background:#dbffef !important;
+}
+
+.redrow{
+  background:#f5b9bf !important;
+}
+.summary-min{
+  font-size: 8px !important;
+  color: grey !important;
+  display: inline !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+div.inline { float:left; }
+.clearBoth { clear:both; }
+
+#toast-container *{
+  text-align: center !important;
+    font-size: 26px !important;
+}
+
+#toast-container > div{
+
+    width: 500px !important;
+}

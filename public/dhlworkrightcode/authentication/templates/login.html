@@ -1,0 +1,21 @@
+
+<ion-view>
+	<ion-content scroll="true">
+    <center> <img  class="application-logo" src="img/logo.png"/></center>
+		<center>
+			<label class="item item-input input-label">
+				<input type="text" name="username" ng-model="user.username" placeholder="Username or email" maxlength=50 ng-keyup=enterButtonHandler($event)>
+			</label>
+			<label class="item item-input input-label">
+				<input type="password" maxlength=25 name="password" class="userPassword" ng-model="user.password" placeholder="Password" ng ng-keyup=enterButtonHandler($event)>
+			</label>
+		</center>
+
+		<center>
+			<button class="button button-assertive login-button" data-ng-click="doLogin(user); scrollTop()">
+				LOGIN
+			</button>
+		</center>
+
+	</ion-content>
+</ion-view>

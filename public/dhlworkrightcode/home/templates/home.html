@@ -1,0 +1,235 @@
+<ion-view>
+	<ion-content>
+
+		<!-- Home tab-->
+		<div class="row dashboard-tab">
+			<div ng-class="overviewItem" ng-click="overviewcontent()">
+				Overview
+			</div>
+			<div ng-class="workersItem" ng-click="workerscontent()">
+				Workers
+			</div>
+			<div class="col col-60 app-details">
+				<!-- <i class="icon-left ion-ios-refresh-empty refresh-icon" ng-click="getCompletedActivities()"><p>Refresh</p></i> -->
+				<a class="button icon-left ion-ios-refresh-empty button-clear button-dark refresh-icon" ng-click="getCompletedActivities()">Refresh</a>
+				<p class="app-name">|</p>
+				<i class="icon-left ion-ios-clock-outline"></i>
+				<p>Last synch at {{currenttime}}</p>
+				<p class="app-name">|</p>
+				<p class="app-name">Supervisor App</p>
+				<i class="icon ion-ios-person-outline"></i>
+			</div>
+		</div>
+
+		<!-- overview tab-->
+		<div ng-show="overviewshow" class="overview-content">
+			<div class="row overview-tab">
+				<div ng-class="completedItem" ng-click="completedcontent()">
+					Completed
+				</div>
+				<div ng-class="activeItem" ng-click="activecontent()">
+					Active
+				</div>
+				<div ng-class="highItem" ng-click="highcontent()">
+					High
+				</div>
+				<div ng-class="lowItem" ng-click="lowcontent()">
+					Low
+				</div>
+				<div ng-class="kpiItem" ng-click="kpicontent()">
+					Summary
+				</div>
+				<!-- <div class="col col-40 overview-row"></div> -->
+			</div>
+
+			<!-- Completed contents-->
+			<div ng-show="completed" class="completed-content">
+				<table ng-table="overviewCompletedTable" data-tap-disabled="true" class="table" ng-show="ShowCompletedTable">
+					<tr ng-repeat="completed in $data" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">
+						<td data-title="'Worker'" sortable="'username'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.username}}</td>
+						<td data-title="'Activity'" sortable="'activity'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.activity}}</td>
+						<td data-title="'Sub-Activity'" sortable="'sub_activity'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.sub_activity}}</td>
+						<td data-title="'Zone'" sortable="'zone'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.zone}}</td>
+						<td data-title="'Qty'" sortable="'quantity'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.quantity}}</td>
+						<td data-title="'UOM'" sortable="'uom'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.uom}}</td>
+						<td data-title="'Start'" sortable="'formatedstart_time'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.formatedstart_time}}</td>
+						<td data-title="'End'" sortable="'formatedend_time'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.formatedend_time}}</td>
+						<td data-title="'Duration'" sortable="'duration'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.duration|millSecondsToTimeString}}</td>
+						<td data-title="'Rate/h'" sortable="'rate'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.rate|number : 2}}</td>
+						<td data-title="'Deviation SPR Units(%)'" sortable="'deviation'" ng-class="{greenrow : completed.rank=='good', redrow : completed.rank=='bad'}">{{completed.deviation|number : 2}}</td>
+					</tr>
+					</tbody>
+				</table>
+				<div ng-show="noCompletedDataFlag" class="no-data">No data found</div>
+			</div>
+			<div ng-show="active" class="completed-content">
+				<table ng-table="overviewActiveTable" data-tap-disabled="true" class="table" ng-show="ShowActiveTable">
+					<tr ng-repeat="active in $data">
+						<td data-title="'Worker'" sortable="'username'">{{active.username}}</td>
+						<td data-title="'Activity'" sortable="'activity'">{{active.activity}}</td>
+						<td data-title="'Sub-Activity'" sortable="'sub_activity'">{{active.sub_activity}}</td>
+						<td data-title="'Zone'" sortable="'zone'">{{active.zone}}</td>
+						<!-- <td data-title="'Qty'" sortable="'qty'">{{completed.quantity}}</td>
+						<td data-title="'UOM'" sortable="'uom'">{{completed.uom}}</td> -->
+						<td data-title="'Start'" sortable="'formatedstart_time'">{{active.formatedstart_time}}</td>
+						<td data-title="'Elapsed'" sortable="'duration'">{{active.duration|millSecondsToTimeString}}</td>
+						<!-- <td data-title="'Deviation SPR Units(%)'" sortable="'deviation'">{{completed.deviation}}</td> -->
+					</tr>
+					</tbody>
+				</table>
+				<div ng-show="noActiveDataFlag" class="no-data">No data found</div>
+			</div>
+			<div ng-show="highPerformance" class="completed-content">
+				<table ng-table="overviewHighPerformanceTable" data-tap-disabled="true" class="table" ng-show="ShowHighPerformanceTable">
+					<tr ng-repeat="highperform in $data">
+						<td data-title="'Worker'" sortable="'username'">{{highperform.username}}</td>
+						<td data-title="'Activity'" sortable="'activity'">{{highperform.activity}}</td>
+						<td data-title="'Sub-Activity'" sortable="'sub_activity'">{{highperform.sub_activity}}</td>
+						<td data-title="'Zone'" sortable="'zone'">{{highperform.zone}}</td>
+						<td data-title="'Qty'" sortable="'quantity'">{{highperform.quantity}}</td>
+						<td data-title="'UOM'" sortable="'uom'">{{highperform.uom}}</td>
+						<td data-title="'Start'" sortable="'formatedstart_time'">{{highperform.formatedstart_time}}</td>
+						<td data-title="'End'" sortable="'formatedend_time'">{{highperform.formatedend_time}}</td>
+						<td data-title="'Duration'" sortable="'duration'">{{highperform.duration|millSecondsToTimeString}}</td>
+						<td data-title="'Rate/h'" sortable="'rate'">{{highperform.rate|number : 2}}</td>
+						<td data-title="'Deviation SPR Units(%)'" sortable="'deviation'">{{highperform.deviation|number : 2}}</td>
+					</tr>
+					</tbody>
+				</table>
+				<div ng-show="noHighPerformanceDataFlag" class="no-data">No data found</div>
+			</div>
+			<div ng-show="lowPerformance" class="completed-content">
+				<table ng-table="overviewLowPerformanceTable" data-tap-disabled="true" class="table" ng-show="ShowLowPerformanceTable">
+					<tr ng-repeat="lowperform in $data">
+						<td data-title="'Worker'" sortable="'username'">{{lowperform.username}}</td>
+						<td data-title="'Activity'" sortable="'activity'">{{lowperform.activity}}</td>
+						<td data-title="'Sub-Activity'" sortable="'sub_activity'">{{lowperform.sub_activity}}</td>
+						<td data-title="'Zone'" sortable="'zone'">{{lowperform.zone}}</td>
+						<td data-title="'Qty'" sortable="'quantity'">{{lowperform.quantity}}</td>
+						<td data-title="'UOM'" sortable="'uom'">{{lowperform.uom}}</td>
+						<td data-title="'Start'" sortable="'formatedstart_time'">{{lowperform.formatedstart_time}}</td>
+						<td data-title="'End'" sortable="'formatedend_time'">{{lowperform.formatedend_time}}</td>
+						<td data-title="'Duration'" sortable="'duration'">{{lowperform.duration|millSecondsToTimeString}}</td>
+						<td data-title="'Rate/h'" sortable="'rate'">{{lowperform.rate|number : 2}}</td>
+						<td data-title="'Deviation SPR Units(%)'" sortable="'deviation'">{{lowperform.deviation|number : 2}}</td>
+					</tr>
+					</tbody>
+				</table>
+				<div ng-show="noLowPerformanceFlag" class="no-data">No data found</div>
+			</div>
+			<div ng-show="kpi" class="completed-content">
+				<table ng-table="overviewAllTable" data-tap-disabled="true" class="table" ng-show="ShowSummaryTable">
+					<tr ng-repeat="all in $data">
+						<td data-title="'Activity'" sortable="'activity'">{{all.activity}}</td>
+						<td data-title="'Sub-Activity'" sortable="'sub_activity'">{{all.sub_activity}}</td>
+						<td data-title="'UOM'" sortable="'uom'">{{all.uom}}</td>
+						<td data-title="'SPR'" sortable="'spr'">{{all.spr}}</td>
+						<td data-title="'Positive Tolerance'" sortable="'tolerance_positive'">{{all.tolerance_positive}}</td>
+						<td data-title="'Negative Tolerance'" sortable="'tolerance_negative'">{{all.tolerance_negative}}</td>
+						<td data-title="'KPI/h'" sortable="'kpi_average'">
+							<!-- <div id="bar1" ng-model="barprog" class="barfiller">
+								<div class="tipWrap">
+									<span class="tip"></span>
+								</div>
+								<span class="fill" data-percentage="50"></span>
+							</div> -->
+							<!-- <uib-progressbar value="95"
+									class="progress-xs no-radius"
+									type="success"></uib-progressbar> -->
+
+									<div class="inline summary-min" style="float:left">{{all.kpi_minimum|number : 2}}</div>
+							<div class="inline progress" style="float:none">
+								<div class="progress-bar" ng-class="{progressgood : all.rank=='good', progressbad : all.rank=='bad', progressnormal : all.rank=='normal'}" role="progressbar" aria-valuenow="{all.kpi_average|number : 2}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width : {{all.progress_perc}}+'%' }">
+									{{all.kpi_average|number : 2}}
+								</div>
+							</div>
+							<div class=" inline summary-min" style="float:right">{{all.kpi_maximum|number : 2}}</div>
+						</td>
+						<td data-title="'Projected EOS'" sortable="'projected_quantity'">{{all.projected_quantity|number : 2}}</td>
+					</tr>
+					</tbody>
+				</table>
+				<div ng-show="noKpiDataFlag" class="no-data">No data found</div>
+			</div>
+		</div>
+
+		<!-- Workers tab-->
+		<div ng-show="workershow" class="overview-content">
+			<div class="row workers-content">
+				<div class="col col-15">
+					 <ul class="list workers-list">
+						 <li class="item" ng-repeat="worker in workers" ng-click="scrollTop();getWorkerDetails(worker)">
+							{{worker.fullname}} <i class="icon-right ion-coffee coffee-icon" ng-show = "worker.is_active"></i>
+						</li>
+					</ul>
+					<!-- <table class="list workers-list">
+						<tr ng-repeat="worker in workers" ng-init="started = []">
+            	<td ng-class="{'selected': started[$index], 'notselected': !started[$index]}" ng-click="started[$index] = !started[$index]; getWorkerDetails(worker)">{{worker.fullname}}</td>
+        		</tr>
+					</table> -->
+				</div>
+				<div class="col col-85">
+					<div class="name-displaytab">
+						{{usernameDisplay}}
+					</div>
+					<div class="row workers-tab">
+						<div ng-class="allWorkerItem" ng-click="allworkercontent()">
+							All
+						</div>
+						<div ng-class="workerSummaryItem" ng-click="workersummarycontent()">
+							Summary
+						</div>
+						<div class="col col-60 overview-row"></div>
+					</div>
+
+					<!-- Workers contents-->
+					<div ng-show="workersalltab" class="all-content">
+						<table ng-table="workersAllTable" data-tap-disabled="true" class="table" ng-show="ShowWorkersAllTable">
+							<tr ng-repeat="allDetails in $data" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">
+								<td data-title="'Activity'" sortable="'activity'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.activity}}</td>
+								<td data-title="'Sub-Activity'" sortable="'sub_activity'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.sub_activity}}</td>
+								<td data-title="'Zone'" sortable="'zone'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.zone}}</td>
+								<td data-title="'Qty'" sortable="'quantity'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.quantity}}</td>
+								<td data-title="'UOM'" sortable="'uom'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.uom}}</td>
+								<td data-title="'Start'" sortable="'formatedstart_time'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.formatedstart_time}}</td>
+								<td data-title="'End'" sortable="'formatedend_time'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.formatedend_time}}</td>
+								<td data-title="'Duration(mins)'" sortable="'duration'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.duration|millSecondsToTimeString}}</td>
+								<td data-title="'Rate/h'" sortable="'rate'" ng-class="{greenrow : allDetails.rank=='good', redrow : allDetails.rank=='bad'}">{{allDetails.rate|number : 2}}</td>
+							</tr>
+							</tbody>
+						</table>
+						<div ng-show="noAllDataFlag" class="no-data">No data found</div>
+					</div>
+					<div ng-show="workerssummarytab" class="all-content">
+						<div class="row">
+							<div class="col col-55">
+								<table ng-table="workersSummaryTable" data-tap-disabled="true" class="table" ng-show="ShowWorkersSummaryTable">
+									<tr ng-repeat="summary in $data">
+										<td data-title="'Activity'" sortable="'activity'">{{summary.activity}}</td>
+										<td data-title="'Sub-Activity'" sortable="'sub_activity'">{{summary.sub_activity}}</td>
+										<td data-title="'UOM'" sortable="'uom'">{{summary.uom}}</td>
+										<td data-title="' SPR (Rate/h)'" sortable="'spr'">{{summary.spr}}</td>
+										<td data-title="'Individual Rate'" sortable="'kpi_average'">{{summary.kpi_average|number : 2}}</td>
+										<td data-title="'Group Rate'" sortable="'group_average'">{{summary.group_average|number : 2}}</td>
+									</tr>
+									</tbody>
+								</table>
+								<div ng-show="noSummaryDataFlag" class="no-data">No data found</div>
+							</div>
+							<div class="col col-45" ng-show="chart">
+								<div class="name-displaytab">
+									<center>Time spent on activities</center>
+								</div>
+								<div id="piechart" style="width: 100%; height: 100%;"></div>
+
+								<!-- <div zingchart id="chart-1" zc-json="myJson" zc-width="100%" zc-height="249px"></div> -->
+								<!-- <div id="gr1sectorchart" style="width: 900px; height: 250px; "></div> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+</ion-view>
+</ion-content>
