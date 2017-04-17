@@ -1,7 +1,7 @@
 /* Controller for dashboard page
    scope of the controller is private */
 
-app.controller('homeCtrl', function($scope, $state, $ionicPopup, $rootScope, $ionicLoading, $window, homeService, $filter, toaster, NgTableParams) {
+app.controller('homeCtrl', function($scope, $state, $ionicPopup, $rootScope, $ionicLoading, $window, homeService, $filter, $timeout, toaster, NgTableParams) {
 
   $scope.overviewshow = true;
   $scope.workershow = false;
@@ -145,7 +145,7 @@ function drawChart() {
       console.log($scope.seriesArray);
       } else {
         $rootScope.hideLoading();
-        toaster.pop('error', "", "Network error, Couldn't load data");
+        toaster.pop('error', "", "Connection error,unable to load workers summary Data");
         $scope.ShowWorkersSummaryTable = false;
         $scope.chart = false;
         $scope.workerSummary = [];
@@ -197,7 +197,7 @@ function drawChart() {
         }
       } else {
          $rootScope.hideLoading();
-         toaster.pop('error', "", "Network error, Couldn't load data");
+         toaster.pop('error', "", "Connection error, Unable to load workers all data");
          $scope.ShowWorkersAllTable = false;
          $scope.workerDetails = [];
         console.log("error in fetching workers all data");
@@ -228,7 +228,7 @@ function drawChart() {
         $scope.user=$scope.workers[0].username;
       } else {
          $rootScope.hideLoading();
-         toaster.pop('error', "", "Network error, Couldn't load data");
+         toaster.pop('error', "", "Connection error, Unable to laod workers list data");
         console.log("error in fetching workers list data");
       }
       $scope.getWorkerAll($scope.user);
@@ -273,7 +273,7 @@ $scope.getLowPerformanceActivities  = function() {
 
       } else {
         $rootScope.hideLoading();
-        toaster.pop('error', "", "Network error, Couldn't load data");
+        toaster.pop('error', "", "Connection error, Couldn't load low performance data");
         $scope.ShowLowPerformanceTable = false;
         console.log("error in fetching low performance activities");
       }
@@ -318,7 +318,7 @@ $scope.getLowPerformanceActivities  = function() {
         }
       } else {
         $rootScope.hideLoading();
-        toaster.pop('error', "", "Network error, Couldn't load data");
+        toaster.pop('error', "", "Connection error, Couldn't load high performance data");
         $scope.ShowHighPerformanceTable= false;
         console.log("error in fetching high performing activities");
       }
@@ -355,7 +355,7 @@ $scope.getLowPerformanceActivities  = function() {
         }
       } else {
         $rootScope.hideLoading();
-        toaster.pop('error', "", "Network error, Couldn't load data");
+        toaster.pop('error', "", "Connection error, Couldn't load overview all data");
         $scope.ShowSummaryTable = false;
         console.log("error in fetching overview all data");
       }
@@ -392,7 +392,7 @@ $scope.getLowPerformanceActivities  = function() {
         }
       } else {
         $rootScope.hideLoading();
-        toaster.pop('error', "", "Network error, Couldn't load data");
+        toaster.pop('error', "", "Connection error, Couldn't load overview active data");
         $scope.ShowActiveTable = false;
         console.log("error in fetching active activities");
       }
@@ -437,7 +437,7 @@ $scope.getLowPerformanceActivities  = function() {
         }
       } else {
         $rootScope.hideLoading();
-        toaster.pop('error', "", "Network error, Couldn't load data");
+        toaster.pop('error', "", "Connection error, Couldn't load overview completed data");
         $scope.ShowCompletedTable = false;
         console.log("error in fetching completed data");
       }
@@ -450,7 +450,7 @@ $scope.getLowPerformanceActivities  = function() {
     });
   };
 
-  $scope.getCompletedActivities();
+  //$scope.getCompletedActivities();
 
   $scope.overviewcontent = function() {
     //$rootScope.showLoading();
@@ -595,6 +595,15 @@ $scope.getLowPerformanceActivities  = function() {
     timeString = hours + ":" + minutes + ":" + scnds;
     return timeString;
   };
+
+  $scope.reload = function () {
+    $scope.getCompletedActivities();
+    $timeout(function(){
+      $scope.reload();
+    },(60000*15))
+  };
+  $scope.reload();
+
 });
 
 app.filter('millSecondsToTimeString', function() {
