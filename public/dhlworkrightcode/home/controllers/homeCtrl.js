@@ -36,31 +36,36 @@ app.controller('homeCtrl', function($scope, $state, $ionicPopup, $rootScope, $io
   $scope.noAllDataFlag = false;
   $scope.noSummaryDataFlag = false;
   $scope.chartData = [];
-  google.charts.load('current', {'packages':['corechart']});
+  google.charts.load('current', {
+    'packages': ['corechart']
+  });
+  $scope.appuser = $rootScope.loginDetails.fullname;
 
+  ////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////
+  function drawChart() {
 
-function drawChart() {
+    //var data = google.visualization.arrayToDataTable();
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Activity');
+    data.addColumn('number', 'Time spent');
+    data.addRows($scope.seriesArray);
+    // Set chart options
+    //var options = {'height':400,'tooltip':{trigger:"selection",isHtml:true},legend:{position:"left"}};
 
-        //var data = google.visualization.arrayToDataTable();
-        var data = new google.visualization.DataTable();
-         data.addColumn('string', 'Activity');
-         data.addColumn('number', 'Time spent');
-        data.addRows($scope.seriesArray);
-        // Set chart options
-        //var options = {'height':400,'tooltip':{trigger:"selection",isHtml:true},legend:{position:"left"}};
-
-        var options = {
-          width :355,
-          'tooltip':{trigger:"selection",isHtml:true}
-        };
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
+    var options = {
+      width: 355,
+      'tooltip': {
+        trigger: "selection",
+        isHtml: true
       }
-//////////////////////////////////////////////////////////////
+    };
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    chart.draw(data, options);
+  }
+  //////////////////////////////////////////////////////////////
 
   $rootScope.showLoading = function() {
     $ionicLoading.show({
@@ -125,7 +130,7 @@ function drawChart() {
 
   $scope.getWorkerSummary = function(username) {
     $scope.seriesArray = [];
-    $rootScope.showLoading();
+    //$rootScope.showLoading();
     homeService.getWorkerSummary(username).then(function(response) {
       if (response.status === 200) {
         $rootScope.hideLoading();
@@ -133,16 +138,16 @@ function drawChart() {
         $scope.workerSummary = response.data.list.activity_array;
         $scope.workerChartData = response.data.chart.activity_array;
         for (i = 0; i < $scope.workerChartData.length; i++) {
-          if($scope.workerChartData[i].time_spent<0){
+          if ($scope.workerChartData[i].time_spent < 0) {
             $scope.workerChartData[i].posTime = Math.abs($scope.workerChartData[i].time_spent);
-          }else{
-            $scope.workerChartData[i].posTime=$scope.workerChartData[i].time_spent;
+          } else {
+            $scope.workerChartData[i].posTime = $scope.workerChartData[i].time_spent;
           }
 
-          $scope.seriesArray.push([$scope.workerChartData[i].activity,$scope.workerChartData[i].posTime]);
+          $scope.seriesArray.push([$scope.workerChartData[i].activity, $scope.workerChartData[i].posTime]);
         }
-      //$scope.chartData = JSON.stringify(seriesArray);
-      console.log($scope.seriesArray);
+        //$scope.chartData = JSON.stringify(seriesArray);
+        console.log($scope.seriesArray);
       } else {
         $rootScope.hideLoading();
         toaster.pop('error', "", "Connection error,unable to load workers summary Data");
@@ -153,7 +158,7 @@ function drawChart() {
       }
       // $scope.seriesArray=[['idle',3],['put away',3],['picking',3]];
       // console.log($scope.seriesArray);
-        $scope.workerSummaryTableShow();
+      $scope.workerSummaryTableShow();
     });
   };
 
@@ -175,31 +180,36 @@ function drawChart() {
   };
 
   $scope.getWorkerAll = function(username) {
-    $rootScope.showLoading();
+    //$rootScope.showLoading();
     homeService.getWorkerAll(username).then(function(response) {
       if (response.status === 200) {
         console.log(response);
         $scope.workerDetails = response.data.activity_array;
+        var isActive = false;
         for (var i = 0; i < response.data.activity_array.length; i++) {
-          if($scope.workerDetails[i].start_time){
+          var formatDuration = $scope.convertTime($scope.workerDetails[i].duration);
+          if ($scope.workerDetails[i].start_time) {
             var formatStartTime = $scope.convertEpochTime($scope.workerDetails[i].start_time);
-          }else{
-            var formatStartTime ="";
+          } else {
+            var formatStartTime = "";
           }
           if ($scope.workerDetails[i].end_time) {
             var formatEndTime = $scope.convertEpochTime($scope.workerDetails[i].end_time);
           } else {
             var formatEndTime = "";
+            isActive = true;
           }
 
           $scope.workerDetails[i].formatedstart_time = formatStartTime;
           $scope.workerDetails[i].formatedend_time = formatEndTime;
+          $scope.workerDetails[i].formatedduration = formatDuration;
+          $scope.workerDetails[i].isActive = isActive;
         }
       } else {
-         $rootScope.hideLoading();
-         toaster.pop('error', "", "Connection error, Unable to load workers all data");
-         $scope.ShowWorkersAllTable = false;
-         $scope.workerDetails = [];
+        $rootScope.hideLoading();
+        toaster.pop('error', "", "Connection error, Unable to load workers all data");
+        $scope.ShowWorkersAllTable = false;
+        $scope.workerDetails = [];
         console.log("error in fetching workers all data");
       }
       $scope.workerAllDetailsTableShow();
@@ -219,16 +229,16 @@ function drawChart() {
   };
 
   $scope.getMyWorkersList = function() {
-    $rootScope.showLoading();
+    //$rootScope.showLoading();
     homeService.getMyWorkersList().then(function(response) {
       if (response.status === 200) {
         console.log(response);
         $scope.workers = response.data.user_array;
         $scope.usernameDisplay = $scope.workers[0].fullname;
-        $scope.user=$scope.workers[0].username;
+        $scope.user = $scope.workers[0].username;
       } else {
-         $rootScope.hideLoading();
-         toaster.pop('error', "", "Connection error, Unable to laod workers list data");
+        $rootScope.hideLoading();
+        toaster.pop('error', "", "Connection error, Unable to laod workers list data");
         console.log("error in fetching workers list data");
       }
       $scope.getWorkerAll($scope.user);
@@ -254,14 +264,15 @@ function drawChart() {
     $scope.getMyWorkersList();
   };
 
-$scope.getLowPerformanceActivities  = function() {
-  $rootScope.showLoading();
+  $scope.getLowPerformanceActivities = function() {
+    //$rootScope.showLoading();
     homeService.getLowPerformanceActivities().then(function(response) {
       if (response.status === 200) {
         console.log(response);
         $scope.lowPerformanceActivities = response.data.activity_array;
         for (var i = 0; i < response.data.activity_array.length; i++) {
           var formatStartTime = $scope.convertEpochTime($scope.lowPerformanceActivities[i].start_time);
+          var formatDuration = $scope.convertTime($scope.lowPerformanceActivities[i].duration);
           if ($scope.lowPerformanceActivities[i].end_time) {
             var formatEndTime = $scope.convertEpochTime($scope.lowPerformanceActivities[i].end_time);
           } else {
@@ -269,6 +280,7 @@ $scope.getLowPerformanceActivities  = function() {
           }
           $scope.lowPerformanceActivities[i].formatedstart_time = formatStartTime;
           $scope.lowPerformanceActivities[i].formatedend_time = formatEndTime;
+          $scope.lowPerformanceActivities[i].formatedduration = formatDuration;
         }
 
       } else {
@@ -286,7 +298,7 @@ $scope.getLowPerformanceActivities  = function() {
   $scope.highPerformanceTableShow = function() {
     if ($scope.highPerformanceActivities.length === 0) {
       $scope.noHighPerformanceDataFlag = true;
-      $scope.ShowHighPerformanceTable= false;
+      $scope.ShowHighPerformanceTable = false;
     } else {
       $scope.noHighPerformanceDataFlag = false;
       $scope.ShowHighPerformanceTable = true;
@@ -301,13 +313,14 @@ $scope.getLowPerformanceActivities  = function() {
   };
 
   $scope.getHighPerformanceActivities = function() {
-    $rootScope.showLoading();
+    //$rootScope.showLoading();
     homeService.getHighPerformanceActivities().then(function(response) {
       if (response.status === 200) {
         console.log(response);
         $scope.highPerformanceActivities = response.data.activity_array;
         for (var i = 0; i < response.data.activity_array.length; i++) {
           var formatStartTime = $scope.convertEpochTime($scope.highPerformanceActivities[i].start_time);
+          var formatDuration = $scope.convertTime($scope.highPerformanceActivities[i].duration);
           if ($scope.highPerformanceActivities[i].end_time) {
             var formatEndTime = $scope.convertEpochTime($scope.highPerformanceActivities[i].end_time);
           } else {
@@ -315,11 +328,12 @@ $scope.getLowPerformanceActivities  = function() {
           }
           $scope.highPerformanceActivities[i].formatedstart_time = formatStartTime;
           $scope.highPerformanceActivities[i].formatedend_time = formatEndTime;
+          $scope.highPerformanceActivities[i].formatedduration = formatDuration;
         }
       } else {
         $rootScope.hideLoading();
         toaster.pop('error', "", "Connection error, Couldn't load high performance data");
-        $scope.ShowHighPerformanceTable= false;
+        $scope.ShowHighPerformanceTable = false;
         console.log("error in fetching high performing activities");
       }
       $scope.highPerformanceTableShow();
@@ -344,14 +358,14 @@ $scope.getLowPerformanceActivities  = function() {
   };
 
   $scope.getAllActivities = function() {
-    $rootScope.showLoading();
+    //$rootScope.showLoading();
     homeService.getAllActivities().then(function(response) {
       if (response.status === 200) {
         //$rootScope.hideLoading();
         console.log(response);
         $scope.allActivities = response.data.activity_array;
-        for(var i=0;i<$scope.allActivities.length;i++){
-          $scope.allActivities[i].progress_perc = ($scope.allActivities[i].kpi_average/$scope.allActivities[i].kpi_maximum)*100;
+        for (var i = 0; i < $scope.allActivities.length; i++) {
+          $scope.allActivities[i].progress_perc = ($scope.allActivities[i].kpi_average / $scope.allActivities[i].kpi_maximum) * 100;
         }
       } else {
         $rootScope.hideLoading();
@@ -381,14 +395,16 @@ $scope.getLowPerformanceActivities  = function() {
   };
 
   $scope.getActiveActivities = function() {
-    $rootScope.showLoading();
+    //$rootScope.showLoading();
     homeService.getActiveActivities().then(function(response) {
       if (response.status === 200) {
         console.log(response);
         $scope.activeActivities = response.data.activity_array;
         for (var i = 0; i < response.data.activity_array.length; i++) {
           var formatStartTime = $scope.convertEpochTime($scope.activeActivities[i].start_time);
+          var elapsed = $scope.convertTime($scope.activeActivities[i].duration);
           $scope.activeActivities[i].formatedstart_time = formatStartTime;
+          $scope.activeActivities[i].elapsed = elapsed;
         }
       } else {
         $rootScope.hideLoading();
@@ -416,6 +432,7 @@ $scope.getLowPerformanceActivities  = function() {
         dataset: $scope.completedActivities
       });
     }
+    $rootScope.hideLoading();
     $scope.getActiveActivities();
   };
 
@@ -427,6 +444,7 @@ $scope.getLowPerformanceActivities  = function() {
         $scope.completedActivities = response.data.activity_array;
         for (var i = 0; i < response.data.activity_array.length; i++) {
           var formatStartTime = $scope.convertEpochTime($scope.completedActivities[i].start_time);
+          var fomratDuration = $scope.convertTime($scope.completedActivities[i].duration);
           if ($scope.completedActivities[i].end_time) {
             var formatEndTime = $scope.convertEpochTime($scope.completedActivities[i].end_time);
           } else {
@@ -434,6 +452,7 @@ $scope.getLowPerformanceActivities  = function() {
           }
           $scope.completedActivities[i].formatedstart_time = formatStartTime;
           $scope.completedActivities[i].formatedend_time = formatEndTime;
+          $scope.completedActivities[i].formatedduration = fomratDuration;
         }
       } else {
         $rootScope.hideLoading();
@@ -442,9 +461,9 @@ $scope.getLowPerformanceActivities  = function() {
         console.log("error in fetching completed data");
       }
       var currentTime = new Date();
-        var time = currentTime.getTime();
-        var hours = currentTime.getHours();
-      console.log("Time"+$scope.convertEpochTime(time));
+      var time = currentTime.getTime();
+      var hours = currentTime.getHours();
+      console.log("Time" + $scope.convertEpochTime(time));
       $scope.currenttime = $scope.convertEpochTime(time);
       $scope.completedTableShow();
     });
@@ -596,11 +615,11 @@ $scope.getLowPerformanceActivities  = function() {
     return timeString;
   };
 
-  $scope.reload = function () {
+  $scope.reload = function() {
     $scope.getCompletedActivities();
-    $timeout(function(){
+    $timeout(function() {
       $scope.reload();
-    },(60000*15))
+    }, (60000 * 15))
   };
   $scope.reload();
 

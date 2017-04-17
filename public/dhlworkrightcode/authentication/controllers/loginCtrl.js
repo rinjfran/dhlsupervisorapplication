@@ -40,8 +40,8 @@ app.controller('loginCtrl', function($scope, $state, $ionicPopup, $window, $root
     $rootScope.scrollTop = function() {
       $ionicScrollDelegate.scrollTop();
   };
-  $rootScope.scrollTop();
 
+  $rootScope.scrollTop();
 
   /*function for enabling enter key in login pagescope of the function is private*/
   $scope.enterButtonHandler = function(event) {
@@ -58,6 +58,7 @@ app.controller('loginCtrl', function($scope, $state, $ionicPopup, $window, $root
     /* function to perform login on hit of login button
        scope of the function is private */
     $scope.doLogin = function(user) {
+      $rootScope.loginDetails = [];
       $rootScope.showLoading();
       if (!$rootScope.user.username) {
         $rootScope.hideLoading();
@@ -76,6 +77,7 @@ app.controller('loginCtrl', function($scope, $state, $ionicPopup, $window, $root
           console.log(response);
           if (response.status === 200) {
             console.log(response);
+            $rootScope.loginDetails = response.data;
             $state.transitionTo('home');
           } else {
             $rootScope.hideLoading();
